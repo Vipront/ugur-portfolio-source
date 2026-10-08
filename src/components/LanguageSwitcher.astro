@@ -1,0 +1,104 @@
+---
+import type { Locale } from "../data/i18n";
+
+interface Props {
+  currentLocale: Locale;
+  currentPath?: string;
+}
+
+const { currentLocale, currentPath = "/" } = Astro.props;
+
+// Compute alternate path
+let targetUrl = "/";
+if (currentLocale === "en") {
+  // English to Turkish: prefix with /tr
+  targetUrl = currentPath === "/" ? "/tr" : `/tr${currentPath.replace(/\/$/, "")}`;
+} else {
+  // Turkish to English: remove /tr prefix
+  const stripped = currentPath.replace(/^\/tr(\/|$)/, "/");
+  targetUrl = stripped || "/";
+}
+---
+
+<div class="lang-switch-wrapper" role="region" aria-label="Language selection">
+  {currentLocale === "en" ? (
+    <a
+      href={targetUrl}
+      class="lang-switch-link"
+      hreflang="tr"
+      lang="tr"
+      title="Türkçe sürüme geç"
+      aria-label="Türkçe sürüme geç"
+    >
+      <span class="lang-active" aria-hidden="true">EN</span>
+      <span class="lang-divider" aria-hidden="true">/</span>
+      <span class="lang-inactive">TR</span>
+    </a>
+  ) : (
+    <a
+      href={targetUrl}
+      class="lang-switch-link"
+      hreflang="en"
+      lang="en"
+      title="Switch to English version"
+      aria-label="Switch to English version"
+    >
+      <span class="lang-inactive">EN</span>
+      <span class="lang-divider" aria-hidden="true">/</span>
+      <span class="lang-active" aria-hidden="true">TR</span>
+    </a>
+  )}
+</div>
+
+<style>
+  .lang-switch-wrapper {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .lang-switch-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    min-height: var(--min-touch, 44px);
+    padding: 0 0.7rem;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xs);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .lang-switch-link:hover {
+    border-color: var(--color-accent-border);
+    background-color: var(--color-surface-subtle);
+  }
+
+  /* Active locale is clearly highlighted in accent green */
+  .lang-active {
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .lang-divider {
+    color: var(--color-text-muted);
+    font-weight: 400;
+    opacity: 0.6;
+  }
+
+  /* Inactive locale is muted, brightens on hover */
+  .lang-inactive {
+    color: var(--color-text-muted);
+    font-weight: 500;
+    transition: color 0.15s ease;
+  }
+
+  .lang-switch-link:hover .lang-inactive {
+    color: var(--color-text-primary);
+  }
+</style>

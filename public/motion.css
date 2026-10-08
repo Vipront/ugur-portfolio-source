@@ -1,0 +1,52 @@
+.mini-prop{width:100px;right:0;top:80px;color:var(--color-accent);pointer-events:none}.mini-prop svg{width:100%;height:auto;overflow:visible;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.mini-prop .atom circle{fill:var(--color-bg-secondary)}.mini-prop .liquid{fill:#79804e44;stroke:none}.mini-prop .bubble{fill:#79804e;stroke:none;animation:bubble-rise 2s infinite}.mini-prop .b2{animation-delay:1s}.mini-prop .bonds{stroke:#79804e}.mini-prop .atom{transform-origin:60px 50px;animation:molecule-turn 6s ease-in-out infinite}.mini-prop .draw-line{stroke:#79804e;stroke-dasharray:100;stroke-dashoffset:100;animation:draw-stroke 4.2s infinite}.mini-prop .chart-line{stroke-dasharray:140;stroke-dashoffset:140;animation:draw-stroke 4.2s infinite}.mini-prop .two{stroke:#79804e;animation-delay:.3s}.mini-prop .chart-dot{fill:currentColor;animation:dot-pulse 2s infinite}.mini-terminal{background:var(--color-bg-secondary);border:1px solid var(--color-border);border-radius:10px;padding:9px;text-align:left;font-size:9px;line-height:1.8;color:var(--color-text-secondary);box-shadow:0 6px 15px #302a2508}.terminal-dots{font-size:6px;color:var(--color-accent);letter-spacing:2px;margin-bottom:5px}.code-row{display:block;animation:code-reveal 4.2s infinite}.code-row:nth-child(3){animation-delay:.25s}.code-row:nth-child(4){animation-delay:.5s}.code-row b{color:#79804e}.terminal-cursor{animation:cursor-blink 1s steps(2) infinite}.mini-prop .paper{fill:var(--color-bg);animation:letter-send 4.2s infinite}.mini-prop .envelope-flap{animation:flap-open 4.2s infinite;transform-origin:60px 30px}.mini-prop .slider{fill:var(--color-bg);animation:slider-move 4s ease-in-out infinite}.mini-prop .s2{animation-direction:reverse}.mini-prop .s3{animation-delay:-2s}.mini-controls{flex-wrap:wrap;justify-content:flex-start;column-gap:14px;row-gap:3px}.mini-controls>span{width:100%;min-height:16px;color:var(--color-text-secondary)}.mini-controls button{font-size:10px}.mini-art[data-phase="1"] .mini-prop{color:#79804e}.mini-art[data-phase="2"] .mini-prop{color:var(--color-accent)}
+@keyframes bubble-rise{0%{transform:translateY(3px);opacity:0}30%{opacity:1}100%{transform:translateY(-27px);opacity:0}}@keyframes molecule-turn{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(12deg)}}@keyframes draw-stroke{0%,10%{stroke-dashoffset:140}65%,90%{stroke-dashoffset:0}100%{stroke-dashoffset:140}}@keyframes dot-pulse{50%{opacity:.3}}@keyframes code-reveal{0%,10%{opacity:0;transform:translateY(3px)}35%,90%{opacity:1;transform:none}100%{opacity:0}}@keyframes cursor-blink{50%{opacity:0}}@keyframes letter-send{0%,100%{transform:translateY(15px);opacity:0}25%,65%{transform:translateY(-6px);opacity:1}90%{transform:translateY(10px);opacity:0}}@keyframes flap-open{25%,65%{transform:scaleY(-.6)}}@keyframes slider-move{50%{transform:translateX(15px)}}
+@media(max-width:750px){.mini-prop{width:80px;top:25px;right:3%}.mini-stage{height:245px}.mini-controls{font-size:10px;column-gap:18px}.mini-controls>span{min-height:14px}.mini-terminal{font-size:8px;padding:6px}.combined-content section{scroll-margin-top:360px}}
+.combined-content .proj-right{flex-wrap:wrap;gap:12px}.combined-content .proj-cta-btn{white-space:normal!important;max-width:100%;box-sizing:border-box}.combined-content .proj-cta-btn span{min-width:0}.combined-content .editorial-entry{background:var(--color-bg-secondary)!important;border-radius:16px}
+@media(prefers-reduced-motion:reduce){.mini-prop *{animation:none!important;stroke-dashoffset:0!important}}
+
+/* Verified site audit repairs */
+/* Paused and inactive states: pause all ongoing prop CSS animations */
+.mini-art[data-paused="true"] .mini-prop,
+.mini-art[data-paused="true"] .mini-prop *,
+.mini-art[data-inactive="true"] .mini-prop,
+.mini-art[data-inactive="true"] .mini-prop * {
+  animation-play-state: paused !important;
+}
+
+/* Theme-aware olive tokens for animated props */
+:root, html[data-theme="light"] {
+  --color-olive: #545b30;
+}
+html[data-theme="dark"] {
+  --color-olive: #a3ad72;
+}
+.mini-prop .bubble {
+  fill: var(--color-olive) !important;
+}
+.mini-prop .bonds,
+.mini-prop .draw-line,
+.mini-prop .two {
+  stroke: var(--color-olive) !important;
+}
+.code-row b {
+  color: var(--color-olive) !important;
+}
+.mini-art[data-phase="1"] .mini-prop {
+  color: var(--color-olive) !important;
+}
+
+/* Respect OS reduced motion preference: disable all prop animations and transitions */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .mini-prop,
+  .mini-prop * {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+}

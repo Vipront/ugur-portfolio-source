@@ -1,0 +1,22 @@
+{
+  "name": "ugur-portfolio",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "node scripts/check-site.mjs && astro build && node scripts/check-site.mjs --dist",
+    "test": "node scripts/check-site.mjs",
+    "security:headers": "node scripts/update-security-headers.mjs",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^7.3.1"
+  },
+  "allowScripts": {
+    "esbuild": true
+  }
+}

@@ -1,0 +1,457 @@
+---
+import { profile } from "../data/profile";
+import { profileTr } from "../data/profile.tr";
+import { ui, type Locale } from "../data/i18n";
+import ThemeToggle from "../components/ThemeToggle.astro";
+import LanguageSwitcher from "../components/LanguageSwitcher.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+  lang?: Locale;
+}
+
+const { title, description, canonicalPath = "", lang = "en" } = Astro.props;
+
+const currentProfile = lang === "tr" ? profileTr : profile;
+const t = ui[lang];
+
+// Compute alternate links for SEO
+const currentPath = canonicalPath || (lang === "tr" ? "/tr" : "/");
+const enPath = lang === "tr" ? (currentPath.replace(/^\/tr(\/|$)/, "/") || "/") : currentPath;
+const trPath = lang === "tr" ? currentPath : (currentPath === "/" ? "/tr" : `/tr${currentPath.replace(/\/$/, "")}`);
+const homeHref = lang === "tr" ? "/tr" : "/";
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {canonicalPath && <link rel="canonical" href={canonicalPath} />}
+    <link rel="alternate" hreflang="en" href={enPath} />
+    <link rel="alternate" hreflang="tr" href={trPath} />
+    <link rel="alternate" hreflang="x-default" href={enPath} />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#fcfbf9" />
+
+    <!-- Anti-FOUC script for instant theme application -->
+    <script is:inline>
+      (function() {
+        try {
+          const saved = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (saved === 'dark' || (!saved && prefersDark)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {canonicalPath && <meta property="og:url" content={canonicalPath} />}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/favicon-192x192.png" />
+    <link rel="icon" href="/favicon.ico" />
+    <!-- Typography: Instrument Serif, JetBrains Mono, Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- Skip link for keyboard accessibility -->
+    <a href="#main-content" class="skip-link">{lang === "tr" ? "Ana içeriğe atla" : "Skip to main content"}</a>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href={homeHref} class="brand-signature" aria-label={lang === "tr" ? "Uğur Cem Yıldız Portfolyo Ana Sayfası" : "Uğur Cem Yıldız Portfolio Home"}>
+          <img
+            src="/brand-mark.png"
+            alt="Uğur Cem Yıldız UCY Monogram"
+            class="brand-mark-img"
+            width="40"
+            height="31"
+            loading="eager"
+            decoding="async"
+          />
+          <div class="brand-text-col">
+            <span class="brand-name">{currentProfile.name}</span>
+            <span class="brand-sub">{currentProfile.title}</span>
+          </div>
+        </a>
+        <div class="header-actions">
+          <nav class="site-nav" aria-label={lang === "tr" ? "Birincil navigasyon" : "Primary navigation"}>
+            <a href={`${homeHref}#about`}>{t.nav.about}</a>
+            <a href={`${homeHref}#experience`}>{t.nav.experience}</a>
+            <a href={`${homeHref}#projects`}>{t.nav.research}</a>
+            <a href={`${homeHref}#skills`}>{t.nav.skills}</a>
+            <a href="/cv.pdf" target="_blank" rel="noopener noreferrer">{t.nav.cv}</a>
+            <a href={`${homeHref}#contact`}>{t.nav.contact}</a>
+          </nav>
+          <LanguageSwitcher currentLocale={lang} currentPath={currentPath} />
+          <ThemeToggle />
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <footer class="site-footer border-top">
+      <div class="container footer-inner">
+        <div class="footer-left">
+          <span class="footer-name">{currentProfile.name}</span>
+          <span class="footer-discipline">{currentProfile.title} · {currentProfile.location}</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  /*
+    =======================================================
+    SHARED SCIENTIFIC EDITORIAL DESIGN TOKENS
+    =======================================================
+  */
+  :root {
+    --color-bg: #fcfbf9;
+    --color-surface: #ffffff;
+    --color-surface-subtle: #f6f5f0;
+    --color-surface-muted: #eeede7;
+    --color-border: #e4e3dc;
+    --color-border-strong: #c8c7be;
+
+    /* Strict high-contrast typography, avoiding harsh pure #000 */
+    --color-text-primary: #161719;
+    --color-text-secondary: #474a4f;
+    --color-text-muted: #6e7279;
+
+    /* Singular Restrained Scientific Accent: Deep Viridian */
+    --color-accent: #15483f;
+    --color-accent-hover: #0c332c;
+    --color-accent-light: #f0f6f4;
+    --color-accent-border: #bbded6;
+
+    /* Typography stacks */
+    --font-serif: "Instrument Serif", Georgia, Cambria, "Times New Roman", serif;
+    --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    /* Layout metrics */
+    --container-max: 1160px;
+    --space-gutter: clamp(1.25rem, 3.5vw, 2.5rem);
+    --section-gap: clamp(3rem, 5vw, 4.5rem);
+    --radius-xs: 1px;
+    --radius-sm: 2px;
+
+    /* Touch target */
+    --min-touch: 44px;
+  }
+
+  /*
+    =======================================================
+    DARK MODE TOKENS — Bio-Science Obsidian & Emerald/Mint
+    =======================================================
+  */
+  html[data-theme="dark"] {
+    --color-bg: #0d1117;
+    --color-surface: #161b22;
+    --color-surface-subtle: #1f242c;
+    --color-surface-muted: #2d333b;
+    --color-border: #30363d;
+    --color-border-strong: #484f58;
+
+    /* High contrast text avoiding pure white */
+    --color-text-primary: #e6edf3;
+    --color-text-secondary: #8b949e;
+    --color-text-muted: #6e7681;
+
+    /* Scientific Emerald / Mint Accent */
+    --color-accent: #2ea043;
+    --color-accent-hover: #3fb950;
+    --color-accent-light: rgba(46, 160, 67, 0.15);
+    --color-accent-border: rgba(46, 160, 67, 0.35);
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -100px;
+    left: 1rem;
+    background: var(--color-text-primary);
+    color: #ffffff;
+    padding: 0.75rem 1.25rem;
+    z-index: 1000;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    border-radius: var(--radius-xs);
+    transition: top 0.15s ease;
+  }
+
+  .skip-link:focus {
+    top: 1rem;
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  .container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-gutter);
+    padding-right: var(--space-gutter);
+  }
+
+  .border-top {
+    border-top: 1px solid var(--color-border);
+  }
+
+  /* Header */
+  .site-header {
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-bg);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 64px;
+  }
+
+  .brand-signature {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    text-decoration: none;
+    color: inherit;
+    min-height: var(--min-touch);
+  }
+
+  .brand-mark-img {
+    height: 32px;
+    width: auto;
+    display: block;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  .brand-text-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .brand-name {
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+  }
+
+  .brand-sub {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .site-nav a {
+    text-decoration: none;
+    color: var(--color-text-secondary);
+    font-size: 0.88rem;
+    font-weight: 500;
+    min-height: var(--min-touch);
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    padding: 0 0.2rem;
+    transition: color 0.15s ease;
+  }
+
+  .site-nav a:hover {
+    color: var(--color-accent);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: var(--min-touch);
+    padding: 0.7rem 1.45rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: var(--radius-xs);
+    transition: all 0.15s ease;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    background-color: var(--color-accent);
+    color: #ffffff;
+    border: 1px solid var(--color-accent);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-strong);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--color-surface-subtle);
+    border-color: var(--color-text-primary);
+  }
+
+  /* Footer */
+  .site-footer {
+    padding-top: 2.25rem;
+    padding-bottom: 2.5rem;
+    background-color: var(--color-bg);
+    margin-top: auto;
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+
+  .footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .footer-name {
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--color-text-primary);
+  }
+
+  .footer-discipline {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+  }
+
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 560px) {
+    .header-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding-top: 0.85rem;
+      padding-bottom: 0.85rem;
+      gap: 0.65rem;
+    }
+
+    .header-actions {
+      width: 100%;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .site-nav {
+      flex: 1;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+</style>
