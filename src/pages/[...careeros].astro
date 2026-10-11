@@ -1,0 +1,9 @@
+---
+import { documents } from '../features/careeros/index.mjs';
+import PortfolioDocument from '../components/PortfolioDocument.astro';
+export function getStaticPaths() {
+  return documents().map(({route,html}) => ({params:{careeros:route.slice(1,-1)},props:{html,route}}));
+}
+const { html,route } = Astro.props;
+---
+<PortfolioDocument raw={html} route={route} />

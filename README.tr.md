@@ -6,7 +6,7 @@ Moleküler biyoloji, hesaplamalı araştırma ve yazılım çalışmalarını an
 
 ![Portföy ana sayfa önizlemesi](docs/portfolio-preview.png)
 
-Astro ile altı statik sayfa üretiliyor. Ortak CSS ve tarayıcı betikleri tema değişimini, animasyonları ve araştırma görsellerinin görüntüleyicisini yönetiyor. Ana içeriği okumak için istemci tarafında çalışan bir arayüz çatısı gerekmiyor.
+Astro ile CareerOS vaka incelemesi dahil sekiz statik sayfa üretiliyor. Ortak CSS ve tarayıcı betikleri tema değişimini, animasyonları ve araştırma görsellerinin görüntüleyicisini yönetiyor. Ana içeriği okumak için istemci tarafında çalışan bir arayüz çatısı gerekmiyor.
 
 ## Yerelde çalıştırma
 
@@ -29,9 +29,9 @@ Yayımlanacak klasör `dist/`. Yapılandırılmış üretim adresi `https://ugur
 
 ## Etkin kaynak dosyaları
 
-`src/content/approved/` altındaki altı belge, gözden geçirilmiş HTML'i içerir. `src/pages/` bu belgeleri içeri alır. Ortak stiller ve etkileşimler `public/*.css` ve `public/*.js` dosyalarındadır.
+Araştırma içerikleri `src/content/approved/` altında korunur. Sekiz sayfa `src/components/PortfolioDocument.astro` ve `src/portfolio/render.mjs` üzerinden ortak yapıyı kullanır. Ana sayfanın iki dilli metni `src/portfolio/content.mjs` içinde düzenlenir. Ortak stiller ve etkileşimler `public/*.css` ve `public/*.js` dosyalarındadır.
 
-Repoda kalan bazı eski yerleşim ve profil dosyaları etkin sayfalarda kullanılmıyor. Bu dosyaları değiştirmek yayımlanan sayfaları değiştirmez. İncelenmiş HTML henüz bileşen kütüphanesine dönüştürülmemiştir. Üst çalışma klasöründeki eski üretim betikleri, üretim derlemesi için gerekli değildir.
+Repoda kalan bazı eski yerleşim ve profil dosyaları etkin sayfalarda kullanılmıyor. Bu dosyaları değiştirmek yayımlanan sayfaları değiştirmez. Gezinme, animasyon kontrolleri, alt bilgi ve ana sayfa ortak kaynaktan üretilir. Üst çalışma klasöründeki eski üretim betikleri, üretim derlemesi için gerekli değildir.
 
 ## Diller ve gizlilik
 

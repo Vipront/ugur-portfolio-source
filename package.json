@@ -11,7 +11,12 @@
     "test": "node scripts/check-site.mjs",
     "security:headers": "node scripts/update-security-headers.mjs",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "prebuild": "node scripts/prepare-features.mjs",
+    "predev": "node scripts/prepare-features.mjs",
+    "pretest": "node scripts/prepare-features.mjs",
+    "careeros:enable": "node scripts/toggle-careeros.mjs on && npm run build",
+    "careeros:disable": "node scripts/toggle-careeros.mjs off && npm run build"
   },
   "dependencies": {
     "astro": "^7.3.1"

@@ -1,3 +1,4 @@
+import { enabled as careerosEnabled } from '../src/features/careeros/index.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -23,6 +24,9 @@ for(const {file,route,html} of documents){
  const englishRoute=route.replace(/^\/tr\//,'/');
  for(const lang of ['en','tr','x-default'])assert.equal(tags.find(t=>t.hreflang===lang)?.href,origin+(lang==='tr'?'/tr'+englishRoute:englishRoute),file+' hreflang '+lang);
  assert.ok(sitemap.includes('<loc>'+origin+route+'</loc>'),file+' missing sitemap URL');
+ for(const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g))assert.doesNotThrow(()=>JSON.parse(m[1]),file+' invalid JSON-LD');
+ const ogImage=tags.find(t=>t.property==='og:image')?.content;
+ if(ogImage){assert.ok(ogImage.startsWith(origin+'/'),file+' og:image must be absolute');assert.ok(existsSync(join(folder,new URL(ogImage).pathname)),file+' missing og:image '+ogImage);}
  assert.ok(!/\/downloads\/|thesis-download/.test(html),file+' thesis download returned');
  assert.ok(!/fonts\.(?:googleapis|gstatic)\.com/.test(html),file+' external fonts returned');
  const cvLinks=tags.filter(t=>/^\/cv(?:-tr)?\.pdf$/.test(t.href||''));
@@ -30,7 +34,7 @@ for(const {file,route,html} of documents){
  assert.ok(cvLinks.every(t=>t.href===(route.startsWith('/tr/')?'/cv-tr.pdf':'/cv.pdf')),file+' wrong CV language');
  for(const tag of tags){
   const href=tag.src||tag.href;
-  if(!href||href.startsWith('//')||/^[a-z][a-z\d+.-]*:/i.test(href))continue;
+  if(!href||href.startsWith('//')||href.startsWith('/_vercel/')||/^[a-z][a-z\d+.-]*:/i.test(href))continue;
   const url=new URL(href,origin+route), targetRoute=url.pathname.endsWith('/')?url.pathname:url.pathname+'/';
   const target=known.get(targetRoute);
   if(target&&url.hash)assert.ok(target.html.includes('id="'+decodeURIComponent(url.hash.slice(1))+'"'),file+' missing anchor '+href);
@@ -39,3 +43,11 @@ for(const {file,route,html} of documents){
 }
 assert.equal(documents.length,pages.length);
 console.log(`PASS: ${documents.length} ${isDist?'built':'source'} pages, canonical/language metadata, links/assets, script CSP hashes and private-file exclusion.`);
+
+if(!careerosEnabled){
+ for(const p of documents) assert.ok(!/careeros/i.test(p.html), 'Disabled module link or content remains in '+p.file);
+ assert.ok(!sitemap.includes('/careeros/'),'Disabled module remains in sitemap');
+ for(const file of ['careeros-assets/careeros.css','careeros-assets/demo.png','careeros-assets/demo-preview.webp'])assert.ok(!existsSync(join(folder,file)),'Disabled module asset remains: '+file);
+ if(isDist)for(const route of ['careeros','tr/careeros'])assert.ok(!existsSync(join('dist',route,'index.html')),'Disabled route remains: '+route);
+ console.log('PASS: CareerOS fully absent from routes, navigation, sitemap and dedicated assets.');
+}

@@ -6,7 +6,7 @@ A bilingual personal website about molecular biology, computational research and
 
 ![Portfolio homepage preview](docs/portfolio-preview.png)
 
-Astro publishes six static pages. Shared CSS and browser scripts handle themes, animation and the research figure viewer. The main content can be read without a client-side framework.
+Astro publishes eight static pages, including the CareerOS case study. Shared CSS and browser scripts handle themes, animation and the research figure viewer. The main content can be read without a client-side framework.
 
 ## Run locally
 
@@ -29,9 +29,9 @@ Publish `dist/`. The configured production URL is `https://ugurcemyildiz.me`.
 
 ## Edit the active source
 
-The six documents in `src/content/approved/` contain the reviewed HTML. `src/pages/` imports them; shared styles and interactions live in `public/*.css` and `public/*.js`.
+Reviewed research bodies remain in `src/content/approved/`. All eight routes use `src/components/PortfolioDocument.astro` and `src/portfolio/render.mjs`. Edit bilingual home copy in `src/portfolio/content.mjs`; shared styles and interactions live in `public/*.css` and `public/*.js`.
 
-Some older layout and profile files remain but are not used by the active routes. Editing them does not update the published pages. The reviewed HTML has not been converted into a component library. Parent-workspace generation helpers are not required for a production build.
+Some older layout and profile files remain but are not used by the active routes. Editing them does not update the published pages. Shared navigation, animation controls, footer and home content now have one maintained source. Parent-workspace generation helpers are not required for a production build.
 
 ## Languages and privacy
 

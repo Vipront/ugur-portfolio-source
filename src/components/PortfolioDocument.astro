@@ -1,0 +1,7 @@
+---
+import { prepareDocument } from '../portfolio/render.mjs';
+interface Props { raw: string; route: string; }
+const { raw, route } = Astro.props;
+const document = prepareDocument(raw, route);
+---
+<Fragment set:html={document} />

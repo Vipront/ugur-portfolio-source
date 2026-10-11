@@ -1,0 +1,92 @@
+{
+  "record_type": "Published-method transcription; incomplete reproduction record",
+  "source_page": "https://ugurcemyildiz.me/research/cancer-bioinformatics/",
+  "sources": [
+    "TCGA Pan-Cancer Atlas",
+    "GTEx"
+  ],
+  "analyses": [
+    {
+      "platform": "GEPIA2",
+      "cohorts": [
+        "BRCA",
+        "LUAD",
+        "COAD"
+      ],
+      "method": "One-way ANOVA",
+      "reported_thresholds": {
+        "log2_fold_change": 1,
+        "p_value": 0.01
+      }
+    },
+    {
+      "platform": "cBioPortal",
+      "cohorts": [
+        "breast",
+        "lung",
+        "colorectal"
+      ],
+      "method": "Copy-number state, mutations and mRNA expression"
+    },
+    {
+      "platform": "Kaplan–Meier Plotter",
+      "cohorts": [
+        "BRCA",
+        "LUAD",
+        "READ"
+      ],
+      "endpoint": "Overall survival",
+      "threshold_selection": "Automatic",
+      "reported_luad_p_value": 0.007
+    },
+    {
+      "platform": "TIMER2.0",
+      "method": "Spearman correlation between CXCR4 expression and inferred CD8+ T-cell infiltration"
+    },
+    {
+      "platform": "STRING",
+      "method": "Predicted functional association network"
+    }
+  ],
+  "expression_figure": {
+    "path": "/images/cancer-bioinformatics/gepia2-cxcr4-expression.jpg",
+    "sample_counts_read_from_labels": {
+      "BRCA": {
+        "tumour": 1085,
+        "normal": 291
+      },
+      "LUAD": {
+        "tumour": 483,
+        "normal": 347
+      },
+      "COAD": {
+        "tumour": 275,
+        "normal": 349
+      }
+    },
+    "note": "Counts transcribed from the published figure, not independently downloaded or verified against a dataset version."
+  },
+  "available_survival_figure": {
+    "path": "/images/cancer-bioinformatics/kaplan-meier-survival-curves.png",
+    "cohort": null,
+    "displayed_hr": 1.39,
+    "displayed_95_percent_ci": [
+      0.62,
+      3.09
+    ],
+    "displayed_log_rank_p_value": 0.42,
+    "note": "A single unlabelled-cohort plot; it does not visually verify the reported LUAD p = 0.007 result."
+  },
+  "unavailable": [
+    "analysis_dates",
+    "dataset_versions",
+    "survival_cohort_sizes",
+    "numerical_expression_cutoffs",
+    "luad_hazard_ratio",
+    "luad_confidence_interval",
+    "algorithm_specific_correlations",
+    "original_cohort_specific_survival_exports",
+    "exported_input_data"
+  ],
+  "interpretation": "Observational associations do not establish causality; the automatic survival threshold needs independent validation."
+}

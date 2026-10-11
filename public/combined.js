@@ -8,7 +8,7 @@
     if (header) {
       const h = header.getBoundingClientRect().height;
       if (h > 0) {
-        document.documentElement.style.setProperty('--header-height', `${Math.round(h)}px`);
+        document.documentElement.style.setProperty('--header-height', `${h}px`);
       }
     }
   }
@@ -76,11 +76,11 @@
 
   const steps = {
     welcome: [['base', 7, 'Merhaba!', 'Hello!'], ['base', 4, 'Çalışmalarımı göstereyim.', 'Let me show you my work.']],
-    study: [['base', 4, 'Biyoloji ve programlama', 'Biology & programming'], ['work', 2, 'Öğren, dene, geliştir', 'Learn, try, build']],
+    study: [['base', 4, 'Biyoloji ve programlama', 'Biology & programming'], ['work', 2, 'Programlama öğreniyorum', 'Learning to code']],
     lab: [['work', 0, 'Pipetleme · örnek hazırlığı', 'Pipetting · sample preparation'], ['work', 1, 'Mikroskopta inceleme', 'Microscopy'], ['work', 3, 'Sonuçları değerlendiriyorum', 'Reviewing results']],
     molecule: [['base', 5, 'CXCR4 · molekül tasarımı', 'CXCR4 · molecular design'], ['work', 2, 'Docking hesaplamaları', 'Docking calculations'], ['work', 3, 'Etkileşimleri karşılaştırıyorum', 'Comparing interactions']],
     chart: [['work', 2, 'Gen ekspresyonu analizi', 'Gene expression analysis'], ['work', 3, 'Sağkalım eğrilerini inceliyorum', 'Reading survival curves'], ['base', 4, 'İmmün infiltrasyon ilişkisi', 'Immune infiltration association']],
-    code: [['work', 2, 'Bir agent iş akışı kuruyorum', 'Building an agent workflow'], ['work', 2, 'Araçları birbirine bağlıyorum', 'Connecting tools'], ['base', 4, 'Çalıştır, kontrol et, geliştir', 'Run, check, improve']],
+    code: [['work', 2, 'Bir agent iş akışı kuruyorum', 'Building an agent workflow'], ['work', 2, 'Araçları birbirine bağlıyorum', 'Connecting tools'], ['base', 4, 'Kodu kontrol ediyorum', 'Checking the code']],
     mail: [['work', 2, 'Mesajını okuyorum', 'Reading your message'], ['base', 4, 'Araştırma mı, yazılım mı?', 'Research or software?'], ['base', 7, 'Bana ulaşabilirsin.', 'Get in touch.']],
     skills: [['work', 0, 'Laboratuvar teknikleri', 'Laboratory techniques'], ['base', 5, 'Hesaplamalı araştırma', 'Computational research'], ['work', 2, 'Programlama ve veri', 'Programming & data']]
   };
@@ -109,6 +109,7 @@
   let x = 0, target = 0, last = 0, walkUntil = 0, rafId = null, pauseStartTime = 0;
   let isVisible = true, isDocVisible = !document.hidden, isInactive = false;
   let lastTransform = '', lastSheet = '', lastFrame = -1, lastAction = '';
+  const horizontalTarget = () => matchMedia('(max-width: 750px)').matches ? 0 : -art.clientWidth * 0.14;
 
   const miniCol = document.querySelector('.mini-column');
   let cachedMetrics = [];
@@ -156,6 +157,7 @@
 
   function setFrame(sheet, frame) {
     if (sheet === lastSheet && frame === lastFrame) return;
+    mini.dataset.spriteRow = `${sheet}-${Math.floor(frame / 4)}`;
     const sheetChanged = sheet !== lastSheet;
     if (sheetChanged) {
       lastSheet = sheet;
@@ -188,13 +190,14 @@
       const tStr = `translateX(${target}px) translateY(0px) rotate(0deg)`;
       if (tStr !== lastTransform) {
         mini.style.transform = tStr;
+        art.style.setProperty('--mini-ground-x', `${target}px`);
         lastTransform = tStr;
       }
     }
   }
 
   function renderStaticState() {
-    target = -art.clientWidth * 0.14;
+    target = horizontalTarget();
     x = target;
     applyAction(manualPhase >= 0 ? manualPhase : 0);
   }
@@ -214,7 +217,7 @@
     prop.classList.add('show');
     art.dataset.scene = scene;
     art.dataset.researchStep = el.dataset.researchStep || el.closest('[data-research-step]')?.dataset.researchStep || '';
-    target = -art.clientWidth * 0.14;
+    target = horizontalTarget();
     walkUntil = time + (reduced || isUserPaused ? 0 : 750);
     const prog = document.getElementById('mini-progress');
     if (prog) prog.style.width = ((index + 1) / entries.length * 100) + '%';
@@ -262,7 +265,7 @@
     updateCachedMetrics();
     syncHeaderHeight();
     syncMiniHeight();
-    target = -art.clientWidth * 0.14;
+    target = horizontalTarget();
     if (reduced || isUserPaused) renderStaticState();
     scheduleSceneCheck();
   }
@@ -270,6 +273,7 @@
   window.addEventListener('scroll', scheduleSceneCheck, { passive: true });
   window.addEventListener('resize', onLayoutChange, { passive: true });
   window.addEventListener('load', onLayoutChange, { passive: true });
+  document.querySelector('.mini-options')?.addEventListener('toggle', onLayoutChange);
   if (document.fonts) document.fonts.ready.then(onLayoutChange);
   const contentParent = document.querySelector('.combined-content') || document.body;
   if (typeof ResizeObserver !== 'undefined' && contentParent) {
@@ -373,7 +377,7 @@
     pauseStartTime = (reduced || isUserPaused || isInactive) ? now : 0;
     phase = 0;
     manualPhase = 0;
-    x = target + 35;
+    x = target + (matchMedia('(max-width: 750px)').matches ? 0 : 35);
     walkUntil = now + (reduced || isUserPaused ? 0 : 750);
     applyAction(0);
     if (!reduced && !isUserPaused && !isInactive) {
@@ -426,6 +430,7 @@
     const tStr = `translateX(${x.toFixed(2)}px) translateY(${bob.toFixed(2)}px) rotate(${tilt.toFixed(2)}deg)`;
     if (tStr !== lastTransform) {
       mini.style.transform = tStr;
+      art.style.setProperty('--mini-ground-x', `${x.toFixed(2)}px`);
       lastTransform = tStr;
     }
     const frame = action[0] === 'work' ? action[1] * 4 + Math.floor(age / 260) % 4 : action[1];

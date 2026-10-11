@@ -13,3 +13,9 @@
 Özgün geçmişte buna rağmen iki tez Word belgesi bulunuyor. Bu kopya yeni geçmişle başlar ve o dosyaları içermez. Gitleaks gizli bilgi kalıplarını tarar; kişisel belge sınıflandırıcısı değildir.
 
 Bu yayın belgeleri düzenler; önizleme görselleri ve kullanım hakkı bildirimi ekler. Uygulama kaynağı doğrulanmış `1f8e632fff49c58faa6dbbacacfd9ca6fb5e138e` commit'inden korunmuştur; ilgisiz yerel CSS değişiklikleri alınmamıştır. Önceki dağıtımın tarayıcı etkileşimi, erişilebilirlik ve hız paketleri bu belge değişikliği için yeniden çalıştırılmadı. Yeni telefon, Safari veya gerçek kullanıcı performansı iddiası yoktur.
+
+## Kaynak eşitleme — 11 Ekim 2026
+
+Uygulama dosyaları dağıtım deposunun 7e928ac sürümüyle eşitlendi. Sekiz sayfa, ortak yapı, CareerOS, iki dilli metinler ve mobil animasyonda simgeyle hizalı sahne yazısı ile artı kontrolü aktarıldı. Dağıtım deposunun Git geçmişi taşınmadı. Son değişikliklerin fiziksel telefonda doğrulanması bekleniyor.
+
+Bu kaynak kopyasında temiz npm ci kurulumu, kaynak/çıktı gizlilik ve meta veri kontrolleriyle sekiz sayfalık derleme ve beş yapı/önizleme testi geçti.

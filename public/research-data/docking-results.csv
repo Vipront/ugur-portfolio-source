@@ -1,0 +1,8 @@
+"Compound","Docking score (kcal/mol)","MW (g/mol)","TPSA (Å²)","Lipinski violations","Bioavailability score","Predicted toxicity class","Predicted Mutagenicity"
+"Fluoro-Deoxy-Amentoflavone","−11.9","524.45","141.34","1","0.55","Class 5 (2500 mg/kg)","Predicted inactive"
+"Deoxy-Amentoflavone","−11.9","490.46","121.11","0 (Fully compliant)","0.55","Class 5 (2430 mg/kg)","Predicted inactive"
+"Deoxy-Amino-Amentoflavone","−11.8","521.47","167.36","1","0.55","Class 3 (159 mg/kg)","Predicted active"
+"MethylAmino-Deoxy-Amentoflavone","−11.8","535.50","153.37","1","0.55","Class 3 (159 mg/kg)","Predicted active"
+"Di-Amino-Amentoflavone","−11.5","520.49","173.15","1","0.55","Class 3 (159 mg/kg)","Predicted active; carcinogenicity also predicted"
+"Natural Amentoflavone (Parent)","−11.1","538.46","181.80","2","0.17","Class 5 (3919 mg/kg)","Predicted inactive"
+"Plerixafor (Clinical Reference)","−9.4","502.78","78.66","2","0.17","Class 4 (550 mg/kg)","Predicted inactive"

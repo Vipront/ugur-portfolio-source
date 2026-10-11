@@ -68,6 +68,10 @@ html[data-theme="dark"] .btn-primary:focus {
   box-sizing: border-box;
   flex-wrap: wrap !important;
 }
+.header-actions {
+  min-width: 0;
+  max-width: 100%;
+}
 .site-nav {
   min-width: 0 !important;
   max-width: 100%;
@@ -143,3 +147,27 @@ summary:focus-visible {
     height: 105px !important;
   }
 }
+
+/* LMU methods cards */
+.lmu-methods{margin-top:24px;padding-top:20px;border-top:1px solid var(--color-border)}
+.lmu-methods-title{margin:0 0 12px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--color-accent)}
+.lmu-methods ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.lmu-methods li{display:flex;flex-direction:column;gap:4px;padding:12px 14px;background:var(--color-surface-subtle);border-left:2px solid var(--color-accent-border)}
+.lmu-methods strong{font-size:14px;color:var(--color-text-primary)}
+.lmu-methods span{font-size:13.5px;line-height:1.5;color:var(--color-text-secondary)}
+
+/* Academic path timeline */
+.path-timeline{margin-top:40px}
+.path-title{margin:0 0 16px;font-size:18px;font-weight:700;color:var(--color-text-primary)}
+.path-timeline ol{list-style:none;margin:0;padding:0;position:relative}
+.path-timeline ol::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:1px;background:var(--color-border-strong)}
+.path-timeline li{position:relative;display:grid;grid-template-columns:130px 1fr;gap:16px;padding:0 0 18px 28px}
+.path-timeline li::before{content:"";position:absolute;left:3px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--color-bg);border:2px solid var(--color-accent)}
+.path-timeline li:last-child::before{background:var(--color-accent)}
+.path-when{font-family:var(--font-mono);font-size:12.5px;color:var(--color-text-muted);padding-top:2px}
+.path-what{margin:0;font-size:15px;font-weight:600;color:var(--color-text-primary)}
+.path-what a{color:inherit;text-decoration:underline;text-decoration-color:var(--color-accent-border);text-underline-offset:3px}
+.path-what a:hover{text-decoration-color:var(--color-accent)}
+.path-what a:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px}
+.path-where{margin:2px 0 0;font-size:13.5px;color:var(--color-text-secondary)}
+@media (max-width:600px){.path-timeline li{grid-template-columns:1fr;gap:2px}}
