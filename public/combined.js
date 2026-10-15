@@ -106,10 +106,17 @@
   });
 
   let current = null, scene = 'welcome', started = 0, phase = -1, manualPhase = 0;
-  let x = 0, target = 0, last = 0, walkUntil = 0, rafId = null, pauseStartTime = 0;
+  let x = 0, target = 0, last = 0, walkUntil = 0, rafId = null, idleTimer = null, pauseStartTime = 0;
   let isVisible = true, isDocVisible = !document.hidden, isInactive = false;
   let lastTransform = '', lastSheet = '', lastFrame = -1, lastAction = '';
   const horizontalTarget = () => matchMedia('(max-width: 750px)').matches ? 0 : -art.clientWidth * 0.14;
+
+  function clearIdleTimer() {
+    if (idleTimer) {
+      clearTimeout(idleTimer);
+      idleTimer = null;
+    }
+  }
 
   const miniCol = document.querySelector('.mini-column');
   let cachedMetrics = [];
@@ -223,6 +230,12 @@
     if (prog) prog.style.width = ((index + 1) / entries.length * 100) + '%';
     if (reduced || isUserPaused) {
       applyAction(0);
+    } else if (!isInactive) {
+      clearIdleTimer();
+      if (!rafId) {
+        last = time;
+        rafId = requestAnimationFrame(animate);
+      }
     }
   }
 
@@ -284,6 +297,7 @@
   }
 
   function stopAnimation() {
+    clearIdleTimer();
     if (rafId) {
       cancelAnimationFrame(rafId);
       rafId = null;
@@ -298,6 +312,7 @@
       renderStaticState();
       return;
     }
+    clearIdleTimer();
     if (pauseStartTime > 0) {
       const elapsed = performance.now() - pauseStartTime;
       started += elapsed;
@@ -381,6 +396,7 @@
     walkUntil = now + (reduced || isUserPaused ? 0 : 750);
     applyAction(0);
     if (!reduced && !isUserPaused && !isInactive) {
+      clearIdleTimer();
       if (!rafId) {
         last = now;
         rafId = requestAnimationFrame(animate);
@@ -398,6 +414,7 @@
     walkUntil = 0;
     applyAction(manualPhase);
     if (!reduced && !isUserPaused && !isInactive) {
+      clearIdleTimer();
       if (!rafId) {
         last = performance.now();
         rafId = requestAnimationFrame(animate);
@@ -406,8 +423,9 @@
   });
 
   function animate(time) {
+    rafId = null;
+    clearIdleTimer();
     if (reduced || isUserPaused || isInactive) {
-      rafId = null;
       renderStaticState();
       return;
     }
@@ -423,11 +441,10 @@
       art.dataset.phase = p;
       mini.setAttribute('aria-label', text('Mini Uğur: ', 'Mini Uğur: ') + label.textContent);
     }
-    x = x + (target - x) * Math.min(1, dt * 0.008);
-    const walking = time < walkUntil;
-    const bob = walking ? -Math.abs(Math.sin(time * 0.012)) * 2 : Math.sin(time * 0.002) * 1.2;
-    const tilt = !walking && action[0] === 'base' ? Math.sin(time * 0.0015) : 0;
-    const tStr = `translateX(${x.toFixed(2)}px) translateY(${bob.toFixed(2)}px) rotate(${tilt.toFixed(2)}deg)`;
+    const walking = time < walkUntil || Math.abs(target - x) > 0.5;
+    x = walking ? x + (target - x) * Math.min(1, dt * 0.008) : target;
+    const bob = walking ? -Math.abs(Math.sin(time * 0.012)) * 2 : 0;
+    const tStr = `translateX(${x.toFixed(2)}px) translateY(${bob.toFixed(2)}px) rotate(0deg)`;
     if (tStr !== lastTransform) {
       mini.style.transform = tStr;
       art.style.setProperty('--mini-ground-x', `${x.toFixed(2)}px`);
@@ -442,7 +459,19 @@
       mini.dataset.action = actStr;
       lastAction = actStr;
     }
-    rafId = requestAnimationFrame(animate);
+    if (walking) {
+      rafId = requestAnimationFrame(animate);
+    } else {
+      const nextPhaseMs = Math.max(50, 4200 - (age % 4200));
+      const nextFrameMs = action[0] === 'work' ? Math.max(50, 260 - (age % 260)) : nextPhaseMs;
+      idleTimer = setTimeout(() => {
+        idleTimer = null;
+        if (!reduced && !isUserPaused && !isInactive && !rafId) {
+          last = performance.now();
+          rafId = requestAnimationFrame(animate);
+        }
+      }, Math.min(nextPhaseMs, nextFrameMs));
+    }
   }
 
   updateCachedMetrics();

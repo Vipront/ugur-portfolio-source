@@ -20,12 +20,12 @@ function header(lang,route) {
 
 function mini(lang) {
  const t=content[lang];
- return `<aside class="mini-column" aria-label="${t.mini}"><div class="mini-stage"><div class="mini-scene-title" id="mini-title"></div><div class="mini-art"><div id="mini-character" role="img" aria-label="${t.mini}"></div><div class="mini-prop" id="mini-prop"><span id="mini-symbol"></span><small id="mini-prop-label"></small></div><div class="mini-floor"></div></div><details class="mini-options"><summary>${t.tools}</summary><div class="mini-controls"><span id="mini-label"></span><button type="button" id="mini-replay">${lang==='tr'?'Baştan oynat':'Replay'}</button></div></details><div class="mini-progress" aria-hidden="true"><i id="mini-progress"></i></div></div></aside>`;
+ return `<aside class="mini-column" aria-label="${t.mini}"><div class="mini-stage"><div class="mini-scene-title" id="mini-title"></div><div class="mini-art"><div id="mini-character" role="img" aria-label="${t.mini}"></div><div class="mini-prop" id="mini-prop"></div><div class="mini-floor"></div></div><details class="mini-options"><summary>${t.tools}</summary><div class="mini-controls"><span id="mini-label"></span><button type="button" id="mini-replay">${lang==='tr'?'Baştan oynat':'Replay'}</button></div></details><div class="mini-progress" aria-hidden="true"><i id="mini-progress"></i></div></div></aside>`;
 }
 
 function footer(lang) {
  const t=content[lang],base=lang==='tr'?'/tr/':'/';
- return `<footer class="portfolio-footer"><a href="${base}">Uğur Cem Yıldız</a><span>${t.location}</span><a href="mailto:yugurcem@gmail.com">yugurcem@gmail.com</a></footer>`;
+ return `<footer class="portfolio-footer"><a href="${base}">Uğur Cem Yıldız</a><span>${t.location}</span><a href="mailto:yugurcem@gmail.com">yugurcem@gmail.com</a><a href="https://github.com/Vipront" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/ugur-cem-yildiz/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></footer>`;
 }
 
 function studies(lang) {
@@ -41,7 +41,7 @@ function homeMain(raw,lang) {
  if(!contact)throw new Error('Home contact section missing');
  const hero=`<section class="hero-section portfolio-hero" aria-labelledby="hero-name"><span class="portfolio-eyebrow">${t.eyebrow}</span><h1 id="hero-name" class="hero-headline">Uğur Cem Yıldız</h1><p class="portfolio-position">${t.lead}</p><p class="hero-lead">${t.intro}</p><ul class="portfolio-evidence">${t.evidence.map(e=>`<li>${e}</li>`).join('')}${enabled?'<li>CareerOS '+(lang==='tr'?'prototipi':'prototype')+'</li>':''}</ul><div class="hero-actions">${link('#projects',t.primary,'btn btn-primary')}${link(cv,t.cv,'btn btn-secondary')}${link('#contact',t.contact,'portfolio-text-link')}</div></section>`;
  const experience=section('experience',t.experience,`<p class="portfolio-section-lead">${t.experienceLead}</p><p>${t.experienceCopy}</p><dl class="method-list">${t.methods.map(([name,description])=>`<div><dt>${name}</dt><dd>${description}</dd></div>`).join('')}</dl>`);
- const about=section('about',t.about,`<p>${t.aboutCopy}</p><ol class="portfolio-education">${t.education.map(([degree,school,dates,gpa])=>`<li><h3>${degree}</h3><p>${school}</p><p class="education-meta">${dates} · ${gpa}</p></li>`).join('')}</ol><p class="education-meta">${t.languages} · ${t.location}</p>`);
+ const about=section('about',t.about,`<p>${t.aboutCopy}</p><ol class="portfolio-education">${t.education.map(([degree,school,dates,gpa])=>`<li><h3>${degree}</h3><p>${school}</p><p class="education-meta">${dates} · ${gpa}</p></li>`).join('')}</ol><p class="education-meta">${t.certifications}</p><p class="education-meta">${t.languages} · ${t.location}</p>`);
  const skills=section('skills',t.skills,`<p class="section-intro">${t.skillsIntro}</p><div class="portfolio-skills">${t.skillGroups.map(g=>`<article><span class="portfolio-eyebrow">${g.context}</span><h3>${g.title}</h3><p>${g.items}</p>${link(g.link,g.label+' →','portfolio-text-link')}<details><summary>${g.more}</summary><p>${g.detail}</p></details></article>`).join('')}</div>`);
  return `<main id="main-content"><div class="combined-layout">${mini(lang)}<div class="combined-content">${hero}${studies(lang)}${experience}${about}${skills}${contact}</div></div></main>`;
 }
@@ -75,7 +75,7 @@ export function prepareDocument(raw,route) {
  // Preserve reviewed anti-FOUC script byte-for-byte; replace the old inline click
  // listener in the header with one small external progressive-enhancement script.
  head=head.replace(/<link rel="icon" href="data:,">/,'<link rel="icon" href="/favicon-32x32.png" sizes="32x32">');
- head+='<link rel="stylesheet" href="/portfolio.css">';
+ head+='<link rel="preload" href="/assets/mini-ugur-poses.webp" as="image" type="image/webp"><link rel="stylesheet" href="/portfolio.css">';
  if(!enabled&&isHome)head=head.replace(/CareerOS/g,lang==='tr'?'kişisel projeler':'personal projects');
  const scripts=[...raw.matchAll(/<script\b[^>]*src="([^"]+)"[^>]*><\/script>/g)].map(m=>m[1]).filter(s=>!s.startsWith('/_vercel/'));
  const scriptTags=[...new Set([...scripts,'/portfolio.js'])].map(src=>`<script defer src="${src}"></script>`).join('');

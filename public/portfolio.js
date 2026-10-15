@@ -2,10 +2,29 @@
 // keyboard dismissal and route-preserving language switching consistent.
 (() => {
  const button=document.getElementById('theme-toggle');
+ const syncThemeMeta=(theme)=>{
+  button?.setAttribute('aria-pressed',theme==='dark'?'true':'false');
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.setAttribute('content',theme==='dark'?'#25231f':'#faf5eb');
+ };
+ syncThemeMeta(document.documentElement.dataset.theme==='dark'?'dark':'light');
  button?.addEventListener('click',()=>{
   const theme=document.documentElement.dataset.theme==='dark'?'light':'dark';
   document.documentElement.dataset.theme=theme;
+  syncThemeMeta(theme);
   try{localStorage.setItem('theme',theme);}catch{}
+ });
+ document.querySelectorAll('[data-copy-email]').forEach(copyBtn=>{
+  const defaultLabel=copyBtn.textContent;
+  copyBtn.addEventListener('click',async()=>{
+   const email=copyBtn.getAttribute('data-copy-email')||'';
+   if(!email||!navigator.clipboard)return;
+   try{
+    await navigator.clipboard.writeText(email);
+    copyBtn.textContent=document.documentElement.lang==='tr'?'Kopyalandı ✓':'Copied ✓';
+    setTimeout(()=>{copyBtn.textContent=defaultLabel;},2000);
+   }catch{}
+  });
  });
  const menu=document.querySelector('.portfolio-menu');
  document.addEventListener('keydown',event=>{

@@ -6,7 +6,7 @@
     const viewer = document.createElement('dialog');
     viewer.className = 'research-viewer';
     viewer.setAttribute('aria-label', researchEnglish ? 'Research figure viewer' : 'Araştırma görseli');
-    viewer.innerHTML = `<div class="viewer-bar"><button type="button" data-dir="-1" aria-label="${researchEnglish ? 'Previous figure' : 'Önceki görsel'}">←</button><span class="viewer-count"></span><button type="button" data-dir="1" aria-label="${researchEnglish ? 'Next figure' : 'Sonraki görsel'}">→</button><button type="button" class="viewer-close">${researchEnglish ? 'Close' : 'Kapat'} ×</button></div><img class="viewer-image" alt=""><p class="viewer-caption"></p>`;
+    viewer.innerHTML = `<div class="viewer-bar"><button type="button" data-dir="-1" aria-label="${researchEnglish ? 'Previous figure' : 'Önceki görsel'}">←</button><span class="viewer-count"></span><button type="button" data-dir="1" aria-label="${researchEnglish ? 'Next figure' : 'Sonraki görsel'}">→</button><button type="button" class="viewer-close">${researchEnglish ? 'Close' : 'Kapat'} <span aria-hidden="true">×</span></button></div><img class="viewer-image" alt=""><p class="viewer-caption"></p>`;
     document.body.append(viewer);
 
     let figureIndex = 0;
