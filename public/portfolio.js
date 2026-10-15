@@ -15,14 +15,15 @@
   try{localStorage.setItem('theme',theme);}catch{}
  });
  document.querySelectorAll('[data-copy-email]').forEach(copyBtn=>{
-  const defaultLabel=copyBtn.textContent;
+  const icon=copyBtn.querySelector('span');
+  const defaultIcon=icon?icon.textContent:copyBtn.textContent;
   copyBtn.addEventListener('click',async()=>{
    const email=copyBtn.getAttribute('data-copy-email')||'';
    if(!email||!navigator.clipboard)return;
    try{
     await navigator.clipboard.writeText(email);
-    copyBtn.textContent=document.documentElement.lang==='tr'?'Kopyalandı ✓':'Copied ✓';
-    setTimeout(()=>{copyBtn.textContent=defaultLabel;},2000);
+    if(icon)icon.textContent='✓';else copyBtn.textContent='✓';
+    setTimeout(()=>{if(icon)icon.textContent=defaultIcon;else copyBtn.textContent=defaultIcon;},1800);
    }catch{}
   });
  });
